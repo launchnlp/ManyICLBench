@@ -81,17 +81,21 @@ logger = logging.getLogger(__name__)
 
 def set_file_handler(logger, file_name):
     today = date.today().strftime("%b-%d-%Y")
+    log_base_dir = "./logs"
+    if not os.path.exists(log_base_dir):
+        os.mkdir(log_base_dir)
     log_dir = os.path.join("./logs", today)
-    os.makedirs(log_dir, exist_ok=True)
+    if not os.path.exists(log_dir):
+        os.mkdir(log_dir)
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
         level=logging.INFO,
         handlers=[logging.StreamHandler(sys.stdout)],
+        force=True,
     )
     log_path = os.path.join(log_dir, file_name)
-            
     fh = logging.FileHandler(filename=log_path, mode='a')
     formatter = logging.Formatter(
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
