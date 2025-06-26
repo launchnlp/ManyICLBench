@@ -1,0 +1,14 @@
+datasets==3.2.0
+fastapi==0.115.8
+google-genai==1.21.1
+huggingface-hub==0.28.1
+nltk==3.9.1
+pandas==2.2.3
+rouge_score==0.1.2
+sacrebleu==2.5.1
+scikit-learn==1.6.1
+tenacity==8.5.0
+tqdm==4.67.1
+transformers==4.48.3
+uvicorn==0.34.0
+vllm==0.7.2

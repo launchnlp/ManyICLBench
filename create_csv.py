@@ -6,7 +6,7 @@ import numpy as np
 OUTPUT_PATH = './results/aggregated'
 tasks = ['banking77', 'goEmotions', 'dialogRE', 'trec_50', 'clinc150', 'MATH-algebra','MATH-geometry', 'MATH-counting_and_probability', 
 'MATH-number_theory', 'BBH-geometric_shapes', 'BBH-salient_translation_error_detection', 'GPQA', 'ARC-Easy', 'ARC-Challenge', 'XLSUM', 
-'MT_Kurdish', 'MT_Tamil', 'MT_Chinese', "MT_Spanish", 'GSM8K', 'BBH-word_sorting', 'BBH-dyck_languages', "GPQA_cot", "GPQA_cot_biology", "GPQA_cot_physics", "GPQA_cot_chemistry"]
+'MT_Kurdish', 'MT_Tamil', 'MT_Chinese', "MT_Spanish", 'GSM8K', 'BBH-word_sorting', 'BBH-dyck_languages', "GPQA_cot"]
 SSL_tasks = ['banking77', 'dialogRE', 'trec_50', 'clinc150','BBH-geometric_shapes']
 ASL_tasks = ['GSM8K', 'MATH-algebra', 'MATH-geometry', 'MATH-counting_and_probability', 'XLSUM', 'BBH-salient_translation_error_detection', 'GPQA_cot','BBH-dyck_languages','MATH-number_theory','ARC-Challenge','BBH-word_sorting']
 classification_tasks = ['banking77', 'goEmotions', 'dialogRE', 'trec_50', 'clinc150']
@@ -19,8 +19,10 @@ symbolic_tasks = ['BBH-geometric_shapes', 'BBH-salient_translation_error_detecti
 
 def get_task_result(dataset, model_name, measurement, context_length):
     expr_name = f"{model_name}_{dataset}_{measurement}_{context_length}"
-    result = pd.read_csv(f"./results/csv/{dataset}/{expr_name}.csv")
-    return result
+    if os.path.exists(f"./results/csv/{dataset}/{expr_name}.csv"):
+        return pd.read_csv(f"./results/csv/{dataset}/{expr_name}.csv")
+    else:
+        return None
 def create_csv_file(datasets, model_name, measurement, context_lengths=None):
     results = {}
     for dataset in datasets:
@@ -29,15 +31,20 @@ def create_csv_file(datasets, model_name, measurement, context_lengths=None):
             temp = dataset
             if temp not in results:
                 results[temp] = {}
-            results[temp][context_length] = result['avg_score'].iloc[0]
+            if result is not None:
+                results[temp][context_length] = result['avg_score'].iloc[0]
+            else:
+                results[temp][context_length] = -1
     df = pd.DataFrame(results).T
     df.index.name = 'Task'
     task_no_apply = ['MT_Kurdish', 'MT_Tamil', 'MT_Chinese', 'MT_Spanish']
     for task in df.index:
         if task not in task_no_apply:
             df.loc[task] = df.loc[task].apply(lambda x: x * 100 if x != -1 else -1)
-    # combine_task_type(df)
-    # combine_task_type_2(df)
+    df['avg'] = df.mean(axis=1)
+    df['avg.L'] = df.iloc[:,5:-1].mean(axis=1)
+    combine_task_type(df)
+    combine_task_type_2(df)
     df.to_csv(f'{OUTPUT_PATH}/{model_name}_{measurement}.csv')
 def combine_task_type(df):
     classification = df.loc[classification_tasks+['BBH-geometric_shapes']].mean()
@@ -52,14 +59,12 @@ def combine_task_type(df):
     df.loc['Math'] = math
     df.loc['Science'] = science
     df.loc['Symbolic'] = symbolic
-    df.loc['All'] = df.mean()
     return df
 def combine_task_type_2(df):
     ASL = df.loc[ASL_tasks].replace(-1, np.nan).mean()
     SSL = df.loc[SSL_tasks].replace(-1, np.nan).mean()
     df.loc['ASL'] = ASL
     df.loc['SSL'] = SSL
-    df.loc['All'] = df.mean()
     return df
 def combine_task_type_results(models, task_types):
     for task_type in task_types:
@@ -70,11 +75,8 @@ def combine_task_type_results(models, task_types):
             combined_df[model_name] = df.loc[task_type]
         combined_df = combined_df.T
         combined_df.index.name = 'Task'
-        combined_df['avg'] = combined_df.mean(axis=1)
-        combined_df['avg.L'] = combined_df.iloc[:,5:-1].mean(axis=1)
         combined_df.to_csv(f'{OUTPUT_PATH}/{task_type}_full.csv')
 
 if __name__ == '__main__':
     context_lengths = ['1k', '2k', '4k', '8k', '16k', '32k', '64k', '128k']
-    model = "Llama-3.1-8B"
-    create_csv_file(["banking77"], "Llama-3.1-8B", "full", context_lengths)
+    create_csv_file(tasks, "Llama-3.1-8B-Instruct", "full", context_lengths)
