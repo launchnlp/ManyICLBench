@@ -1,5 +1,5 @@
 export HF_HOME=YOUR_HF_HOME
-export MODEL_PATH=Llama-3.1-8B
+export MODEL_PATH=Llama-3.1-8B-Instruct
 export GPUS=4
 export MAX_MODEL_LENGTH=131072
 export HF_TOKEN=YOUR_HF_TOKEN
