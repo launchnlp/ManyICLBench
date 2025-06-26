@@ -1,7 +1,7 @@
 # ManyICLBench
 
-> 📄 Accepted to **ACL 2025 (Main Conference)**  
-> 🔗 [Paper](https://arxiv.org/abs/2411.07130) | 🏆 [Leaderboard](https://huggingface.co/spaces/launch/ManyICLBench_Leaderboard) | 📊 [Dataset](https://huggingface.co/datasets/launch/ManyICLBench)
+📄 Accepted to **ACL 2025 (Main Conference)**  
+🔗 [Paper](https://arxiv.org/abs/2411.07130) | 🏆 [Leaderboard](https://huggingface.co/spaces/launch/ManyICLBench_Leaderboard) | 📊 [Dataset](https://huggingface.co/datasets/launch/ManyICLBench)
 
 ---
 
@@ -58,7 +58,7 @@ If you use our benchmark or results in your work, please cite us:
 
 ## 📬 Contact
 
-- 🧑‍💻 Lead author: [Kaijian Zou] ([zkjzou@umich.edu])
+- 🧑‍💻 Lead author: Kaijian Zou([zkjzou@umich.edu])
 - ❓ For questions or bugs: please open an [issue](https://github.com/launchnlp/ManyICLBench/issues)
 
 ## 🙏 Acknowledgements
