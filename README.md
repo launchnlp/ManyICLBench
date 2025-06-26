@@ -58,7 +58,7 @@ If you use our benchmark or results in your work, please cite us:
 
 ## 📬 Contact
 
-- 🧑‍💻 Lead author: Kaijian Zou([zkjzou@umich.edu])
+- 🧑‍💻 Lead author: Kaijian Zou(zkjzou@umich.edu)
 - ❓ For questions or bugs: please open an [issue](https://github.com/launchnlp/ManyICLBench/issues)
 
 ## 🙏 Acknowledgements
